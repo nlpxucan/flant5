@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from config import Config
 import os, sys, math
-from MetaPreTrainingDataset import get_single_h5py_nlp_data, _data_wrapper, read_conll, TASK_NAME_LIST
+from MetaPreTrainingDataset import get_finetune_data, _data_wrapper, read_conll
 import t5_model
 import numpy as np
 import random
@@ -152,7 +152,7 @@ if __name__ == "__main__":
 		scaler = GradScaler()
 
 	val_batch_size = _C.val_batch_size
-	dev_loader = get_single_h5py_nlp_data(_C, _C.dev_path, _C.train_path, "validation", val_batch_size, tokenizer, _C.max_length, shuffle=True, distributed=False, is_root=True, is_train=False)
+	dev_loader = get_finetune_data(_C, _C.dev_path, "validation", val_batch_size, tokenizer, _C.max_length, shuffle=True, distributed=False, is_root=True, is_train=False)
 
 	if _C.enable_adam_opt:
 		optimizer = utils.build_optimizer(_C, model)
