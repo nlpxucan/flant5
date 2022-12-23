@@ -270,7 +270,7 @@ if __name__ == "__main__":
 			_score = evaluation(_C, dev_loader, model, device, is_root=is_root)
 			print("dev loss:"+str(_score))
 
-			torch.save(model.state_dict(), '/vc_data/users/caxu/KnowDA4R/FLANT5_conv/best-'+str(epoch)+ '-' + str(_score.item()) + '.pth')
+			torch.save(model.state_dict(), os.path.join(_A.serialization_dir, 'best-'+str(epoch)+ '-' + str(_score.item()) + '.pth'))
 			
 			print("saving end")
 			#break
