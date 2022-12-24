@@ -65,5 +65,5 @@ conda init<br>
 source ~/.bashrc<br>
 conda activate flant5<br>
 
-python run_t5_inference.py --config configuration/nlg_meta.yml --serialization-dir flant5_conv --config-override num_training_steps 100000  enable_small_tune True tokenizer_type google/flan-t5-xxl lm_type google/flan-t5-xxl batch_size 1  checkpoint_every_step 200 max_length 2400 enable_new_task_embeddings False enable_pretrain_task_embeddings False task_embed_count 0 prefix_length 3 prefix_set_number 1 enable_layer_wise_prefix True  val_batch_size 4 random_seed 0 train_path dataset/conv_train.jsonl dev_path  dataset/conv_dev.jsonl gradient_accumulation_steps 16 --train --multi-gpu --start-from-checkpoint flant5_conv/best-3-0.847955048084259.pth --online-inference
+python flant5_inference.py
 
