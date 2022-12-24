@@ -16,14 +16,15 @@ from fast_bleu import SelfBLEU
 import json
 import edit_distance
 import copy
+from nltk.translate.bleu_score import sentence_bleu
 
-fr = open('prompt_test.txt','r')
-lines = fr.readlines()
+#fr = open('prompt_test.txt','r')
+#lines = fr.readlines()
 
-prompt = ''
-for line in lines:
-	print(line)
-	prompt += line
+#prompt = ''
+#for line in lines:
+#	print(line)
+#	prompt += line
 
 
 def online_inference(_C, model, tokenizer, device, input_string, task_ids=None, task_type_ids=None, prefix_ids=None):
@@ -55,9 +56,10 @@ def online_inference(_C, model, tokenizer, device, input_string, task_ids=None, 
 		early_stopping=True
 	)
 
-	for i in range(outputs.size(0)):
-		output_seq = tokenizer.decode(outputs[i]).replace("<pad>", "").replace("</s>", "")
-		print("system answer: "+output_seq+'\n')
+	#for i in range(outputs.size(0)):
+	output_seq = tokenizer.decode(outputs[0]).replace("<pad>", "").replace("</s>", "")
+	return output_seq
+	#print("system answer: "+output_seq+'\n')
 
 
 
@@ -187,8 +189,35 @@ if __name__ == "__main__":
 	model.eval()
 
 	if _A.online_inference:
-		print("input: "+str(prompt)+"##")
-		online_inference(_C, model, tokenizer, device, prompt, prefix_ids=0)
+		
+		fr = open('Techspec_Wiki_Bing_Sum_test.jsonl','r')
+		fw = open('Domain_knowledge_predicted','w')
+		fw_ref = open('Domain_knowledge_references','w')
+
+		lines = fr.readlines()
+
+		
+
+		count = 0
+
+		for line in lines:
+			print(count)
+			count += 1
+			
+			line_obj = json.loads(line.strip())
+
+			predicted_result = online_inference(_C, model, tokenizer, device, line_obj['input'], prefix_ids=0)	
+
+			fw.write(predicted_result+'\n')
+			fw_ref.write(line_obj['output']+'\n')
+
+		
+
+		fw.close()
+		fw_ref.close()
+
+
+
 	else:
 		eval_iter = iter(eval_data)
 		output_lines = []
